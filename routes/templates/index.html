@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<a href="/auth/login">Login</a> <a href="/auth/signup">Signup</a>
+{% if accounts %}
+    {% for account in accounts %}
+        <p>{{ account.username }}</p>
+    {% endfor %}
+{% endif %}
+{% endblock %}
