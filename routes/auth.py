@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, request, render_template, redirect, url_for, flash
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 auth_router = Blueprint(
@@ -10,8 +10,11 @@ auth_router = Blueprint(
 
 @auth_router.route("/login", methods=["GET", "POST"])
 def login():
+    if not current_user.is_anonymous:
+        return redirect(url_for("home.account"))
+
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("auth.html")
 
     username = request.form.get("username")
     password = request.form.get("password")
@@ -28,7 +31,7 @@ def login():
 @auth_router.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "GET":
-        return render_template("signup.html")
+        return render_template("auth.html")
     
     username = request.form.get("username")
     password = request.form.get("password")
