@@ -36,9 +36,11 @@ class Database:
 
     def __init_db(self):
         with open("database/schema.sql") as schema_file:
-            schema: str = schema_file.read()
+            schema: str = schema_file.read().split("-- NEW QUERY --")
 
-        self.execute(schema)
+        for query in schema:
+            query = query.strip("\n")
+            self.execute(query)
 
     def fetch(self, query: str, params: tuple[any] = ()) -> None | list[Record]:
         with closing(self.connection.cursor()) as cursor:
@@ -50,4 +52,9 @@ class Database:
     def execute(self, query: str, params: tuple[any] = ()) -> None:
         with closing(self.connection.cursor()) as cursor:
             cursor.execute(query, params)
+            self.connection.commit()
+    
+    def execute_many(self, query: str, params: list[tuple[any]] = ()) -> None:
+        with closing(self.connection.cursor()) as cursor:
+            cursor.executemany(query, params)
             self.connection.commit()
