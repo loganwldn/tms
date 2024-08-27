@@ -7,12 +7,6 @@ home_router = Blueprint("home", __name__)
 def index():
     return render_template("index.html")
 
-@home_router.route("/a")
-def a():
-    accounts = current_app.config.db.fetch("SELECT * FROM accounts")
-    
-    return render_template("index.html", accounts=accounts)
-
 @home_router.route("/account")
 @login_required
 def account():
