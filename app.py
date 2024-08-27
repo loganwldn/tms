@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 from database import Database, Record
 from routes import ROUTES
@@ -9,6 +9,14 @@ app: Flask = Flask(
     template_folder="routes/templates",
     static_folder="routes/static"
 )
+
+def custom_templating():
+    return dict(
+        current_user = current_user,
+        logged_in = not current_user.is_anonymous
+    )
+
+app.context_processor(custom_templating)
 
 app.config["SECRET_KEY"] = "abcdefg"
 app.config.db = Database()
