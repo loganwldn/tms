@@ -1,3 +1,3 @@
-# WIMS - Warehouse Inventory Management System
+# TMS - Ticket Management System
 
-Welcome to WIMS, a Warehouse Inventory Management System.
+Welcome to TMS, a ticket management system.
