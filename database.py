@@ -2,12 +2,15 @@ import sqlite3 as sqlite
 from contextlib import closing
 
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash
 
 class User(UserMixin):
     def __init__(self, user_record):
         self.id = user_record.account_id
         self.username = user_record.username
         self.password = user_record.password
+
+        self.is_admin = user_record.is_admin
 
 class Record:
     def __init__(self, data: dict):
@@ -25,7 +28,11 @@ class Database:
     database: sqlite.Connection
 
     def __init__(self):
-        self.connection = sqlite.connect("database/inventory.db", check_same_thread=False)
+        self.connection = sqlite.connect(
+            "database/inventory.sqlite",
+            check_same_thread=False,
+            detect_types=sqlite.PARSE_DECLTYPES | sqlite.PARSE_COLNAMES
+        )
         self.connection.row_factory = self.__dict_factory
 
         self.__init_db()
@@ -41,6 +48,14 @@ class Database:
         for query in schema:
             query = query.strip("\n")
             self.execute(query)
+
+        admin_account = self.fetch("SELECT * FROM accounts WHERE username='admin'")
+
+        if not admin_account:
+            self.execute(
+                "INSERT INTO accounts (username, password, is_admin) VALUES ('admin',?,true)",
+                (generate_password_hash("password", method="pbkdf2:sha256"),)
+            )
 
     def fetch(self, query: str, params: tuple[any] = ()) -> None | list[Record]:
         with closing(self.connection.cursor()) as cursor:
