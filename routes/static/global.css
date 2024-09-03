@@ -3,9 +3,26 @@ body {
     background-image: url('./img/background.png');
 }
 
+.card {
+    box-shadow: 0px 0px 5px 5px rgba(41, 41, 41, 0.1);
+}
+
 .padded-card {
     padding: 25px;
     border-radius: 5px;
     background-color: white;
-    box-shadow: 0px 0px 10px 10px rgba(0,0,0,0.3);
+    box-shadow: 0px 0px 10px 10px rgba(41, 41, 41, 0.3);
+}
+
+.centred-form {
+    position: absolute;
+    width: 15em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.vertical-align-centre {
+    display: flex;
+    justify-content: center;
 }
