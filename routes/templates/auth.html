@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}Login{% endblock %}
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
-{% endblock %}
 
 {% block content %}
-<div class="auth-form">
+<div class="centred-form">
     <div class="padded-card">
         <form method="POST">
             {% with messages = get_flashed_messages() %}
@@ -19,7 +16,11 @@
                 {% endif %}
             {% endwith %}
             <fieldset class="text-centre">
-                <legend>Login / Signup</legend>
+                {% if login_form %}
+                    <legend>Login</legend>
+                {% else %}
+                    <legend>Signup</legend>
+                {% endif %}
                 <hr>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
@@ -29,8 +30,13 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" name="password" class="form-control" placeholder="Password">
                 </div>
-                <button type="submit" formaction="/auth/login" class="btn btn-primary">Login</button>
-                <button type="submit" formaction="/auth/signup" class="btn btn-primary">Signup</button>
+                {% if login_form %}
+                    <p><a class="link-opacity-100" href="/auth/signup">Don't have an account?</a></p>
+                    <button type="submit" formaction="/auth/login" class="btn btn-primary">Login</button>
+                {% else %}
+                <p><a class="link-opacity-100" href="/auth/login">Already have an account?</a></p>
+                    <button type="submit" formaction="/auth/signup" class="btn btn-primary">Signup</button>
+                {% endif %}
             </fieldset>
         </form>
     </div>
