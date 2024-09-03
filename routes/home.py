@@ -5,9 +5,20 @@ home_router = Blueprint("home", __name__)
 
 @home_router.route("/")
 def index():
-    return render_template("index.html")
+    tickets = current_app.config.db.fetch("SELECT * FROM tickets")
+
+    for ticket in tickets:
+        owner = current_app.config.db.fetch(
+            "SELECT * FROM accounts WHERE account_id=?",
+            (ticket.ticket_owner_id,)
+        )
+
+        if owner:
+            ticket.owner = owner[0]
+
+    return render_template("index.html", tickets=tickets)
 
 @home_router.route("/account")
 @login_required
 def account():
-    return f"<p>Welcome, {current_user.username}</p>"
+    return render_template("account.html")
