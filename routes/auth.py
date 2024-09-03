@@ -1,10 +1,9 @@
 from flask import Blueprint, current_app, request, render_template, redirect, url_for, flash
-from flask_login import login_user, logout_user, current_user, AnonymousUserMixin
+from flask_login import login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 auth_router = Blueprint(
     "auth", __name__,
-    template_folder="templates/auth",
     url_prefix="/auth"
 )
 
@@ -14,7 +13,7 @@ def login():
         return redirect(url_for("home.account"))
 
     if request.method == "GET":
-        return render_template("auth.html")
+        return render_template("auth.html", login_form=True)
 
     username = request.form.get("username")
     password = request.form.get("password")
@@ -31,7 +30,7 @@ def login():
 @auth_router.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "GET":
-        return render_template("auth.html")
+        return render_template("auth.html", login_form=False)
     
     username = request.form.get("username")
     password = request.form.get("password")
@@ -43,7 +42,7 @@ def signup():
         return redirect(url_for("auth.signup"))
     
     current_app.config.db.execute(
-        "INSERT INTO accounts (username, password, account_type) VALUES (?,?,'user')",
+        "INSERT INTO accounts (username, password, is_admin) VALUES (?,?,false)",
         (username, generate_password_hash(password, method="pbkdf2:sha256"))
     )
 
