@@ -13,7 +13,7 @@ app: Flask = Flask(
 def custom_templating():
     return dict(
         current_user = current_user,
-        logged_in = not current_user.is_anonymous
+        logged_in = not current_user.is_anonymous,
     )
 
 app.context_processor(custom_templating)
@@ -27,9 +27,10 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(account_id):
-    current_user: Record = app.config.db.fetch("SELECT * FROM accounts WHERE account_id=?", (account_id,))[0]
-    
-    return current_user.to_user()
+    current_user: Record = app.config.db.fetch("SELECT * FROM accounts WHERE account_id=?", (account_id,))
+
+    if current_user:
+        return current_user[0].to_user()
 
 for router in ROUTES:
     app.register_blueprint(router)
