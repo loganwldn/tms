@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS tickets (
     ticket_owner_id INTEGER,
     title varchar(255),
     content varchar(255),
-    post_date timestamp, 
+    post_date timestamp,
+    last_updated timestamp,
     FOREIGN KEY(ticket_owner_id) REFERENCES accounts(account_id)
 );
