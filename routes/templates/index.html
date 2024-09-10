@@ -5,12 +5,19 @@
 <div class="col-sm-10" style="position: absolute; left: 50%; transform: translateX(-50%)">
     <div class="row" style="margin-top: 20px; text-align: center;">
         <h1>
-            Welcome to TMS,
+            Welcome to TMS
         
             {% if logged_in %}
                 {{ current_user.username.title() }}.
             {% else %}
-                login/signup to get started!
+            <div class="row">
+                <div class="col-xs-6">
+                    <button class="btn btn-warning btn-block" onclick="window.location.href = '/auth/signup'">Signup to start managing tickets</button>
+                </div>
+                <div class="col-xs-6">
+                    <button class="btn btn-success btn-block" onclick="window.location.href = '/auth/login'">Login to an existing account</button>
+                </div>
+            </div>
             {% endif %}
         </h1>
     </div>
