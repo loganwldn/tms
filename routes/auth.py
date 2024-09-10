@@ -10,7 +10,7 @@ auth_router = Blueprint(
 @auth_router.route("/login", methods=["GET", "POST"])
 def login():
     if not current_user.is_anonymous:
-        return redirect(url_for("home.account"))
+        return redirect(url_for("home.index"))
 
     if request.method == "GET":
         return render_template("auth.html", login_form=True)
@@ -25,7 +25,7 @@ def login():
         return redirect(url_for("auth.login"))
     
     login_user(existing_user[0].to_user(), remember=False)
-    return redirect(url_for("home.account"))
+    return redirect(url_for("home.index"))
 
 @auth_router.route("/signup", methods=["GET", "POST"])
 def signup():
