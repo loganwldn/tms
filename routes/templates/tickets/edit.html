@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit ticket{% endblock %}
+
+{% block content %}
+<div class="centred-form">
+    <div class="padded-card">
+        <form action="/ticket/update" method="POST">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <fieldset class="text-centre">
+                <legend>Edit ticket {{ ticket.ticket_id }}</legend>
+                <hr>
+                <input type="hidden" name="ticket_id" value="{{ ticket.ticket_id }}">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Ticket title</label>
+                    <input type="text" name="title" class="form-control" value="{{ ticket.title }}">
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Ticket content</label>
+                    <textarea name="content" rows="3" class="form-control"> {{ ticket.content }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}
