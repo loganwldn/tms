@@ -9,6 +9,10 @@
     <div class="card">
         <div class="card-header">
             Ticket #{{ ticket.ticket_id }} | Posted {{ ticket.post_date.strftime("%m/%d/%Y @%H:%M") }}
+
+            {% if ticket.last_updated %}
+            (edited {{ ticket.last_updated.strftime("%m/%d/%Y @%H:%M") }})
+            {% endif %}
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ ticket.title }}</h5>
