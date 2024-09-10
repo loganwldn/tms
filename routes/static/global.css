@@ -3,15 +3,26 @@ body {
     background-image: url('./img/background.png');
 }
 
+.navbar {
+    background-color: #fff6f3 !important;
+    box-shadow: 0px 0px 0px 5px rgba(41, 41, 41, 0.1);
+}
+
 .card {
     box-shadow: 0px 0px 5px 5px rgba(41, 41, 41, 0.1);
+    background: url('./img/wave.svg') no-repeat;
+    background-size: cover;
+    background-position-y: 50%;
 }
 
 .padded-card {
     padding: 25px;
     border-radius: 5px;
+    box-shadow: 0px 0px 10px 10px rgba(41, 41, 41, 0.1);
+
+    background: url('./img/wave.svg') no-repeat;
+    background-size: contain;
     background-color: white;
-    box-shadow: 0px 0px 10px 10px rgba(41, 41, 41, 0.3);
 }
 
 .centred-form {
@@ -25,4 +36,14 @@ body {
 .vertical-align-centre {
     display: flex;
     justify-content: center;
+}
+
+button.card-link {
+    background: none;
+    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
 }
