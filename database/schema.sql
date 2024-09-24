@@ -14,5 +14,6 @@ CREATE TABLE IF NOT EXISTS tickets (
     content varchar(255),
     post_date timestamp,
     last_updated timestamp,
+    is_open boolean DEFAULT 1,
     FOREIGN KEY(ticket_owner_id) REFERENCES accounts(account_id)
 );
