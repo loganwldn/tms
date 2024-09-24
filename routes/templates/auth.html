@@ -6,12 +6,18 @@
 <div class="centred-form">
     <div class="padded-card">
         <form method="POST">
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ message }}
-                        </div>
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-success" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
             {% endwith %}
@@ -24,11 +30,33 @@
                 <hr>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="Username">
+                    <input
+                        type="text"
+                        name="username"
+                        class="form-control"
+                        placeholder="Username"
+                        minlength="5"
+                        maxlength="12"
+                        required
+                    />
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="Password">
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Password"
+                        {% if not login_form %}
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}"
+                        {% endif %}
+                        required
+                    />
+                    {% if not login_form %}
+                        <small id="passwordHelp" class="form-text text-muted">
+                            Must contain at least one number and one uppercase and lowercase letter, and at least 5 or more characters
+                        </small>
+                    {% endif %}
                 </div>
                 {% if login_form %}
                     <p><a class="link-opacity-100" href="/auth/signup">Don't have an account?</a></p>
