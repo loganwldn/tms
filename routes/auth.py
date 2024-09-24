@@ -1,3 +1,4 @@
+import sys
 from flask import Blueprint, current_app, request, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -21,10 +22,15 @@ def login():
     existing_user = current_app.config.db.fetch("SELECT * FROM accounts WHERE username=?", (username,))
 
     if not existing_user or not check_password_hash(existing_user[0].password, password):
+        print(username, password, file=sys.stderr)
         flash("Login details incorrect!", category="error")
         return redirect(url_for("auth.login"))
     
     login_user(existing_user[0].to_user(), remember=False)
+
+    if current_app.config.testing:
+        return "", 200
+
     return redirect(url_for("home.index"))
 
 @auth_router.route("/signup", methods=["GET", "POST"])
@@ -52,4 +58,8 @@ def signup():
 @auth_router.route("/logout")
 def logout():
     logout_user()
+
+    if current_app.config.testing:
+        return "", 200
+
     return redirect(url_for("home.index"))

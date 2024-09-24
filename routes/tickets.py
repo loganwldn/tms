@@ -37,6 +37,9 @@ def create_ticket():
         (ticket_owner_id, title, content, posted_at)
     )
 
+    if current_app.config.testing:
+        return "", 200
+
     return redirect(url_for("home.index"))
 
 @tickets_router.route("/update", methods=["GET", "POST"])
@@ -63,12 +66,13 @@ def update_ticket():
     new_content = request.form.get("content")
     last_updated = datetime.now()
 
-    print(new_title, new_content, last_updated)
-
     current_app.config.db.execute(
         "UPDATE tickets SET title=?, content=?, last_updated=? WHERE ticket_id=?",
         (new_title, new_content, last_updated, ticket_id)
     )
+
+    if current_app.config.testing:
+        return "", 200
 
     return redirect(url_for("tickets.display", ticket_id=ticket_id))
 
@@ -91,6 +95,9 @@ def set_ticket_state():
         (not ticket.is_open, ticket_id)
     )
 
+    if current_app.config.testing:
+        return "", 200
+
     return redirect(url_for("home.index"))
 
 @tickets_router.route("/delete", methods=["POST"])
@@ -105,5 +112,8 @@ def delete_ticket():
         "DELETE FROM tickets WHERE ticket_id=?",
         (ticket_id,)
     )
+
+    if current_app.config.testing:
+        return "", 200
 
     return redirect(url_for("home.index"))
