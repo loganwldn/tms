@@ -19,6 +19,8 @@ def custom_templating():
 app.context_processor(custom_templating)
 
 app.config["SECRET_KEY"] = "abcdefg"
+
+app.config.testing = False
 app.config.db = Database()
 
 login_manager = LoginManager()
