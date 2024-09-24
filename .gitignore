@@ -1,2 +1,4 @@
 *.pyc
 flask/
+.pytest_cache/
+inventory.sqlite
