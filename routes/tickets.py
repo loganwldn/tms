@@ -72,6 +72,27 @@ def update_ticket():
 
     return redirect(url_for("tickets.display", ticket_id=ticket_id))
 
+@tickets_router.route("/state", methods=["POST"])
+@login_required
+def set_ticket_state():
+    ticket_id = request.form.get("ticket_id")
+    ticket = current_app.config.db.fetch(
+        "SELECT * FROM tickets WHERE ticket_id=?",
+        (ticket_id,)
+    )
+
+    if not ticket or not current_user.is_admin or current_user.id != ticket[0].ticket_owner_id:
+        return redirect(url_for("home.index"))
+
+    ticket = ticket[0]
+    
+    current_app.config.db.execute(
+        "UPDATE tickets SET is_open=? WHERE ticket_id=?",
+        (not ticket.is_open, ticket_id)
+    )
+
+    return redirect(url_for("home.index"))
+
 @tickets_router.route("/delete", methods=["POST"])
 @login_required
 def delete_ticket():
@@ -80,7 +101,6 @@ def delete_ticket():
 
     ticket_id = request.form.get("ticket_id")
 
-    print(f"delete {ticket_id}")
     current_app.config.db.execute(
         "DELETE FROM tickets WHERE ticket_id=?",
         (ticket_id,)
