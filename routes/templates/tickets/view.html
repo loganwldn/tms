@@ -13,6 +13,14 @@
             {% if ticket.last_updated %}
             (edited {{ ticket.last_updated.strftime("%m/%d/%Y @%H:%M") }})
             {% endif %}
+
+            | Status:
+
+            {% if ticket.is_open %}
+            OPEN
+            {% else %}
+            CLOSED
+            {% endif %}
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ ticket.title }}</h5>
