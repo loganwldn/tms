@@ -21,7 +21,7 @@ def login():
     existing_user = current_app.config.db.fetch("SELECT * FROM accounts WHERE username=?", (username,))
 
     if not existing_user or not check_password_hash(existing_user[0].password, password):
-        flash("Login details incorrect!")
+        flash("Login details incorrect!", category="error")
         return redirect(url_for("auth.login"))
     
     login_user(existing_user[0].to_user(), remember=False)
@@ -38,7 +38,7 @@ def signup():
     existing_username = current_app.config.db.fetch("SELECT * FROM accounts WHERE username=?", (username,))
 
     if existing_username:
-        flash("Username already exists!")
+        flash("Username already exists!", category="error")
         return redirect(url_for("auth.signup"))
     
     current_app.config.db.execute(
@@ -46,6 +46,7 @@ def signup():
         (username, generate_password_hash(password, method="pbkdf2:sha256"))
     )
 
+    flash("Signup success! Please now login.", category="success")
     return redirect(url_for("auth.login"))
 
 @auth_router.route("/logout")
