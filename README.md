@@ -8,3 +8,4 @@ Welcome to TMS, a ticket management system.
 - Python Requirements:
     - Flask - Python microservice for webserver.
     - flask-login - Login management for flask using browser sessions.
+    - pytest - Python package for easy testing of flask routes.
