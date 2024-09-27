@@ -1,5 +1,6 @@
 import sqlite3 as sqlite
 from contextlib import closing
+from datetime import datetime
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
@@ -28,6 +29,8 @@ class Database:
     database: sqlite.Connection
 
     def __init__(self):
+        self.initialise = False
+
         self.connection = sqlite.connect(
             "database/inventory.sqlite",
             check_same_thread=False,
@@ -56,8 +59,42 @@ class Database:
                 "INSERT INTO accounts (username, password, is_admin) VALUES ('admin',?,true)",
                 (generate_password_hash("password", method="pbkdf2:sha256"),)
             )
+        
+        test_account = self.fetch("SELECT * FROM accounts WHERE username='test_user'")
+
+        if not test_account:
+            self.execute(
+                "INSERT INTO accounts (username, password, is_admin) VALUES ('test_user',?,false)",
+                (generate_password_hash("password", method="pbkdf2:sha256"),)
+            )
+        
+        self.initialise = True
+    
+    def __check_empty(self):
+        if not self.initialise:
+            return
+
+        with closing(self.connection.cursor()) as cursor:
+            cursor.execute("SELECT * FROM tickets")
+            results: list[sqlite.Row] = cursor.fetchall()
+        
+        if not results:
+            # DB is empty
+            with open("database/rows.sql") as rows_file:
+                schema: str = rows_file.read().split("-- NEW ROW --")
+            
+            for query in schema:
+                query = query.strip("\n")
+                
+                with closing(self.connection.cursor()) as cursor:
+                    print(query)
+                    cursor.execute(query, (datetime.now(),))
+                
+            self.connection.commit()
 
     def fetch(self, query: str, params: tuple[any] = ()) -> None | list[Record]:
+        self.__check_empty()
+
         with closing(self.connection.cursor()) as cursor:
             cursor.execute(query, params)
             results: list[sqlite.Row] = cursor.fetchall()
@@ -65,11 +102,15 @@ class Database:
         return [Record(item) for item in results]
 
     def execute(self, query: str, params: tuple[any] = ()) -> None:
+        self.__check_empty()
+
         with closing(self.connection.cursor()) as cursor:
             cursor.execute(query, params)
             self.connection.commit()
     
     def execute_many(self, query: str, params: list[tuple[any]] = ()) -> None:
+        self.__check_empty()
+
         with closing(self.connection.cursor()) as cursor:
             cursor.executemany(query, params)
             self.connection.commit()
