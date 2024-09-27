@@ -85,19 +85,22 @@ def set_ticket_state():
         (ticket_id,)
     )
 
-    if not ticket or not current_user.is_admin or current_user.id != ticket[0].ticket_owner_id:
+    if not ticket:
         return redirect(url_for("home.index"))
-
-    ticket = ticket[0]
     
-    current_app.config.db.execute(
-        "UPDATE tickets SET is_open=? WHERE ticket_id=?",
-        (not ticket.is_open, ticket_id)
-    )
+    if current_user.is_admin or current_user.id == ticket[0].ticket_owner_id:
+        ticket = ticket[0]
+        
+        current_app.config.db.execute(
+            "UPDATE tickets SET is_open=? WHERE ticket_id=?",
+            (not ticket.is_open, ticket_id)
+        )
 
-    if current_app.config.testing:
-        return "", 200
+        if current_app.config.testing:
+            return "", 200
 
+        return redirect(url_for("home.index"))
+    
     return redirect(url_for("home.index"))
 
 @tickets_router.route("/delete", methods=["POST"])
