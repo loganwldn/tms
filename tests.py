@@ -35,13 +35,13 @@ def test_login(client):
     response = client.get("/auth/login")
 
     assert b'<form method="POST">' in response.data
-    assert b'"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}"' not in response.data # Should not exist for password in login form
+    assert br'"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}"' not in response.data # Should not exist for password in login form
 
 def test_signup(client):
     response = client.get("/auth/signup")
 
     assert b'<form method="POST">' in response.data
-    assert b'"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}"' in response.data # Should exist for password in login form
+    assert br'"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}"' in response.data # Should exist for password in login form
 
 def test_login_form(client):
     client.post("/auth/login", data={
