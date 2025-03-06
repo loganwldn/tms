@@ -60,12 +60,12 @@ def test_login_form(client):
 
 def test_signup_and_login(client):
     client.post("/auth/signup", data={
-        "username": "test_user",
+        "username": "some_user",
         "password": "some_password"
     })
 
     response = client.post("/auth/login", data={
-        "username": "test_user",
+        "username": "some_user",
         "password": "some_password"
     })
 
@@ -88,11 +88,10 @@ def test_ticket_view(client):
     response = client.get("/ticket/1")
 
     assert b"Ticket #1" in response.data
-    assert b'Test Title' in response.data
+    assert b'First ticket!' in response.data
 
 @pytest.mark.usefixtures("login")
 def test_ticket_state(client):
-
     response = client.get("/ticket/1")
     is_open = b"OPEN" in response.data
 
@@ -110,7 +109,7 @@ def test_ticket_state(client):
 def test_ticket_edit(client):
     response = client.get("/ticket/update?ticket_id=1")
     assert b"<legend>Edit ticket 1</legend>" in response.data
-    assert b'<input type="text" name="title" class="form-control" value="Test Title">' in response.data
+    assert b'<input type="text" name="title" class="form-control" value="First ticket!">' in response.data
 
     response = client.post("/ticket/update", data={
         "ticket_id": "1",
