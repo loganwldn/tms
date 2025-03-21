@@ -1,4 +1,4 @@
-name: Deployment prerunner
+name: Testing Workflow
 
 on:
   pull_request:
