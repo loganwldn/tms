@@ -10,10 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Vulnerability scan
     steps:
-    - name: ZAP Scan
+    - name: ZAP Full Scan
       uses: zaproxy/action-full-scan@v0.12.0
-      with:
-        target: 'https://www.zaproxy.org/'
   test:
       runs-on: ubuntu-latest
       steps:
