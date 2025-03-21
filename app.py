@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask
 from flask_login import LoginManager, current_user
 
@@ -17,8 +19,10 @@ def custom_templating():
     )
 
 app.context_processor(custom_templating)
+app.logger.setLevel(logging.INFO)
 
 app.config["SECRET_KEY"] = "abcdefg"
+app.config["DEBUG"] = False
 
 app.config.testing = False
 app.config.db = Database()
