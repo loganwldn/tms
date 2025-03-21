@@ -1,6 +1,7 @@
 import sqlite3 as sqlite
 from contextlib import closing
 from datetime import datetime
+from typing import Optional
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
@@ -92,7 +93,7 @@ class Database:
                 
             self.connection.commit()
 
-    def fetch(self, query: str, params: tuple[any] = ()) -> None | list[Record]:
+    def fetch(self, query: str, params: tuple[any] = ()) -> Optional[list[Record]]:
         self.__check_empty()
 
         with closing(self.connection.cursor()) as cursor:
