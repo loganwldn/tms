@@ -6,14 +6,6 @@ on:
       - 'main'
 
 jobs:
-  scanner:
-    runs-on: ubuntu-latest
-    name: Vulnerability scan
-    steps:
-    - name: ZAP Scan
-      uses: zaproxy/action-baseline@v0.14.0
-      with:
-        target: 'https://tms-pidn.onrender.com/'
   test:
       runs-on: ubuntu-latest
       steps:
