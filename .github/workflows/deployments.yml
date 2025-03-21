@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Vulnerability scan
     steps:
-    - name: ZAP Full Scan
+    - name: ZAP Scan
       uses: zaproxy/action-full-scan@v0.12.0
+      with:
+        target: 'https://tms-pidn.onrender.com/'
   test:
       runs-on: ubuntu-latest
       steps:
