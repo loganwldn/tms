@@ -56,7 +56,7 @@ def update_ticket():
             (ticket_id,)
         )
 
-        if not ticket:
+        if not ticket or ticket[0].ticket_owner_id != current_user.id:
             return redirect(url_for("home.index"))
 
         return render_template("edit.html", ticket=ticket[0])
