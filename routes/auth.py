@@ -1,4 +1,5 @@
 import sys
+import time
 from flask import Blueprint, current_app, request, render_template, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -27,6 +28,7 @@ def login():
         return redirect(url_for("auth.login"))
     
     login_user(existing_user[0].to_user(), remember=False)
+    current_app.logger.info(f"USER {username} LOGGED IN at {time.time()}")
 
     if current_app.config.testing:
         return "", 200
